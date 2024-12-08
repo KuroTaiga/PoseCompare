@@ -8,7 +8,7 @@ repos=(
 )
 
 # Directory to clone repositories into
-clone_dir="./repos"
+clone_dir="./"
 
 # Create the directory if it doesn't exist
 mkdir -p "$clone_dir"
