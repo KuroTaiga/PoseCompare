@@ -59,7 +59,7 @@ repo_checkout(){
     echo "All repositories processed."
 }
 
-checkout_weights(){
+weights_checkout(){
     conda install curl
     mkdir -p checkpoints
     cd checkpoints
