@@ -79,6 +79,10 @@ create_env_from_file(){
     conda activate posecompare
 }
 
+mediapipe_setup(){
+    pip install mediapipe
+}
+
 vitpose_setup(){
     cd mmcv
     git checkout v1.3.9
@@ -100,6 +104,7 @@ main(){
     repo_checkout || echo_error "repo_checkout"
     weights_checkout || echo_error "weights"
     create_conda_env || echo_error "create_conda_env"
+    mediapipe_setup || echo_error "mediapipe"
     vitpose_setup || echo_error "ViTPose"
     fdhuman_setup || echo_error "FDHumans"
     echo "Setup finished!"
