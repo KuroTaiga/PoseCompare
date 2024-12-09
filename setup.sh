@@ -60,7 +60,8 @@ repo_checkout(){
 }
 
 weights_checkout(){
-    conda install curl
+    conda install curl -y
+    rm -rf checkpoints
     mkdir -p checkpoints
     cd checkpoints
     curl -L -o vitpose_checkpoint.pth "https://62afda.dm.files.1drv.com/y4mBDiqHvl4ClkQbjljDfxZ35JemNwe-D-YlTuMfeya1BIR5tVP3cO26ntjrJkBL-2L8beSmOOPy7149gWRMkDqTZCPhS--XxryYZLSGtdKxR5ADq-9S_6ApoHxLbQP4MOs63iPz2jSLQMFqJFcFdoXZ2ml2HyvGkCu7MxyP9ELoZvtYRyipBDvsFvR2bN7xUknS6LR5HdBjGpZtM7saMmIXQ"
@@ -68,10 +69,10 @@ weights_checkout(){
 }
 
 create_conda_env(){
-    # conda env create -f environment.yml
-    conda create --name posecompare python=3.10.13
+    conda create --name posecompare python=3.10.13 -y
+    eval "$(conda shell.bash hook)"
     conda activate posecompare
-    conda install ipykernel
+    conda install ipykernel -y
 }
 
 create_env_from_file(){
@@ -81,22 +82,43 @@ create_env_from_file(){
 
 mediapipe_setup(){
     pip install mediapipe
+    pip install apex
 }
 
 vitpose_setup(){
     cd mmcv
     git checkout v1.3.9
-    MMCV_WITH_OPS=1 pip isntall -e .
+    MMCV_WITH_OPS=1 pip install -e .
     cd ../ViTPose
     pip install -v -e .
     cd ..
     pip install timm==0.4.9 einops
 }
 
+verifiy_opengl(){
+    if conda list | grep -q "osmesa"; then
+        echo "osmesa is already installed in the current Conda environment."
+    else
+        echo "osmesa is not installed. Installing osmesa..."
+        git clone https://github.com/mmatl/pyopengl.git
+        pip install ./pyopengl
+        # # Install osmesa in the current Conda environment
+        # conda install -c conda-forge osmesa -y
+        
+        # if [ $? -eq 0 ]; then
+        #     echo "osmesa successfully installed in the current Conda environment."
+        # else
+        #     echo "Failed to install osmesa. Please check your Conda environment and try again."
+        #     exit 1
+        # fi
+    fi
+}
+
 fdhuman_setup(){
     cd FDHumans
     pip install -e .[all]
     cd ..
+    verifiy_opengl || echo_error "opengl"
 }
 
 main(){
