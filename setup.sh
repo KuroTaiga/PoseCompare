@@ -121,6 +121,12 @@ fdhuman_setup(){
     verifiy_opengl || echo_error "opengl"
 }
 
+gradio_version_setup(){
+    pip isntall gradio
+    pip install scipy
+    pip install opencv-python
+}
+
 main(){
     echo "Starting setup process"
     repo_checkout || echo_error "repo_checkout"
